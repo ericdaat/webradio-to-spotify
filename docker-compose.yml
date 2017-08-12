@@ -1,0 +1,34 @@
+version: '3'
+services:
+ mysql:
+  image: mariadb
+  environment:
+   MYSQL_ROOT_PASSWORD: eric
+  volumes:
+   - ./data/mysql:/var/lib/mysql
+  expose:
+   - 3306
+  ports:
+   - 3306:3306
+
+ phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  container_name: phpmyadmin
+  environment:
+   - PMA_ARBITRARY=1
+  restart: always
+  links:
+   - mysql
+  ports:
+   - 8080:80
+  volumes:
+   - /sessions
+
+ mongo:
+  image: mongo:latest
+  expose:
+   - 27017
+  volumes:
+   - ./data/mongo:/data/db
+  ports:
+   - 27017:27017

@@ -1,0 +1,5 @@
+*.pyc
+venv
+data
+.spotify-token.json
+.ipynb_checkpoints
