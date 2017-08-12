@@ -5,6 +5,7 @@ from kshe_scraper import KSHEScraper
 app = Flask(__name__)
 api = SpotifyApi()
 scraper = KSHEScraper('http://player.listenlive.co/20101/en/songhistory')
+playlist_uri = '3BCcE8T945z1MnfPWkFsfX'
 
 @app.route('/')
 def index():
@@ -19,13 +20,18 @@ def scrap():
 
 @app.route('/update_playlist', methods=['GET','POST'])
 def update_playlist():
-    playlist_uri = '3BCcE8T945z1MnfPWkFsfX'
     song_history = scraper.get_song_history()
     spotify_songs = [api.search_track(s['title'], s['artist']) \
                         for s in song_history]
 
+    spotify_songs = [s for s in spotify_songs if len(s) > 0]
+
+    uris_in_playlist = api.get_track_uris_from_playlist(playlist_uri)
+
     response = api.add_tracks_to_playlist(
-            [s['spotify_uri'] for s in spotify_songs if len(s)>0],
+            [s['spotify_uri'] \
+                for s in spotify_songs \
+                if s['spotify_uri'] not in uris_in_playlist],
             playlist_uri)
 
     return jsonify(**response)

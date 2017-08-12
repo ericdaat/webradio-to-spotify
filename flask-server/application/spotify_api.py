@@ -78,9 +78,26 @@ class SpotifyApi(object):
         }
 
 
+    def get_track_uris_from_playlist(self, playlist_uri):
+        response = requests.get(
+            'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
+                self._user_id,
+                playlist_uri
+            ),
+            headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
+            params={
+                'fields':['items.track.uri'],
+                'limit': 100
+            }).json()
+
+        return set([t['track']['uri'] for t in response['items']])
+
+
     def add_tracks_to_playlist(self, track_uris, playlist_uri):
         return requests.post(
-            'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(self._user_id, playlist_uri),
+                'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
+                self._user_id,
+                playlist_uri),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             data=json.dumps({'uris': track_uris})
         ).json()
