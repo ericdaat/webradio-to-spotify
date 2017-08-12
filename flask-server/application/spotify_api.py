@@ -36,8 +36,6 @@ class SpotifyApi(object):
                 'scope': 'playlist-modify-public playlist-modify-private'
             })
 
-        logging.debug('got client credentials')
-
         return response.json()
 
 
@@ -64,6 +62,12 @@ class SpotifyApi(object):
                 headers={'Authorization': 'Bearer {0}'.format(self._access_token)}
             ).json()['tracks']['items'][0]
         except:
+            logging.warning(
+                'could not find track {0} from {1}'.format(
+                    track_name, 
+                    artist_name
+                )
+            )
             return {}
 
         return {

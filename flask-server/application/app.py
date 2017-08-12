@@ -1,11 +1,24 @@
-from flask import Flask, jsonify, redirect, request
+from flask import Flask, jsonify, redirect, request, url_for
 from spotify_api import SpotifyApi
 from kshe_scraper import KSHEScraper
+import logging
+import uwsgi
 
 app = Flask(__name__)
 api = SpotifyApi()
 scraper = KSHEScraper('http://player.listenlive.co/20101/en/songhistory')
 playlist_uri = '3BCcE8T945z1MnfPWkFsfX'
+
+
+# def update_playlist(signum):
+#     logging.info('signum {0} received, will update playlist'.format(signum))
+    
+#     return redirect(url_for('update_playlist'))
+
+
+# uwsgi.register_signal(99, "", update_playlist)
+# uwsgi.add_timer(99, 60)
+
 
 @app.route('/')
 def index():
@@ -15,6 +28,7 @@ def index():
 @app.route('/scrap')
 def scrap():
     song_history=scraper.get_song_history()
+
     return jsonify(song_history)
 
 
@@ -25,14 +39,18 @@ def update_playlist():
                         for s in song_history]
 
     spotify_songs = [s for s in spotify_songs if len(s) > 0]
+    
+    try:
+        uris_in_playlist = api.get_track_uris_from_playlist(playlist_uri)
+    except:
+        uris_in_playlist = set()
 
-    uris_in_playlist = api.get_track_uris_from_playlist(playlist_uri)
+    tracks_to_be_added = [s['spotify_uri'] for s in spotify_songs \
+                            if s['spotify_uri'] not in uris_in_playlist]
 
-    response = api.add_tracks_to_playlist(
-            [s['spotify_uri'] \
-                for s in spotify_songs \
-                if s['spotify_uri'] not in uris_in_playlist],
-            playlist_uri)
+    logging.info('will add {0} tracks'.format(len(tracks_to_be_added)))
+
+    response = api.add_tracks_to_playlist(tracks_to_be_added, playlist_uri)
 
     return jsonify(**response)
 
@@ -52,8 +70,10 @@ def callback():
     token_type = response["token_type"]
     api._token_expires_in = response["expires_in"]
 
+    logging.info('authenticated')
+
     return jsonify(
             authenticated=True,
             token_type=token_type,
             token_expires_in=api._token_expires_in
-            )
+        )
