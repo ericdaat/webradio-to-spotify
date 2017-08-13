@@ -2,5 +2,6 @@
     "user_id": "",
     "client_id":"",
     "client_secret": "",
-    "redirect_uri": ""
+    "redirect_uri": "",
+    "playlist_uri":
 }

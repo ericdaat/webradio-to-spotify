@@ -12,3 +12,36 @@ My next steps include:
  - Pull some stats about what's playing, and when, trying to predict the next song, or mood, who knows what ...
 
 Feel free to ping me if you want to help !
+
+## Installation
+To make it work, here's what to do.
+
+First, you'll need to setup your Spotify developer account, and register an app. Find how [here](https://developer.spotify.com/web-api/). Once your app is created, you will have access to the following crendentials:
+ - client_id
+ - client_secret
+ - redirect_uri
+
+The app will need those to update tracks to your playlist. Copy the file ```.spotify-token.json.dist``` into ```.spotify-token.json``` and fill in these credentials. You will also need your spotify *user-id* (your username) and the *playlist-uri* to which you'll upload the tracks to.
+
+Once you're good, follow these commands to start the server. 
+
+``` shell
+git clone git@github.com:ericdaat/kshe-to-spotify.git
+cd kshe-to-spotify
+pip install virtualenv
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cd flask-server
+uwsgi wsgi.ini
+```
+
+The app should now be running on ```localhost:9999```.
+
+
+## API
+The calls supported so far are:
+ - [GET] ```localhost:9999/```: Doesn't do much
+ - [GET] ```localhost:9999/auth```: Authenticate for 3600 seconds
+ - [GET] ```localhost:9999/update_playlist```: Updates the playlist with the latest songs
+

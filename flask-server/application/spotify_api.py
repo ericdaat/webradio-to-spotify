@@ -16,6 +16,8 @@ class SpotifyApi(object):
         self._client_id = credentials['client_id']
         self._client_secret = credentials['client_secret']
         self.redirect_uri = credentials['redirect_uri']
+        self.playlist_uri = credentials['playlist_uri']
+        
         self._access_token = None
         self._refresh_token = None
         self._token_expires_in = None

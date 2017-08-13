@@ -7,7 +7,6 @@ import uwsgi
 app = Flask(__name__)
 api = SpotifyApi()
 scraper = KSHEScraper('http://player.listenlive.co/20101/en/songhistory')
-playlist_uri = '3BCcE8T945z1MnfPWkFsfX'
 
 
 # def update_playlist(signum):
@@ -41,7 +40,7 @@ def update_playlist():
     spotify_songs = [s for s in spotify_songs if len(s) > 0]
     
     try:
-        uris_in_playlist = api.get_track_uris_from_playlist(playlist_uri)
+        uris_in_playlist = api.get_track_uris_from_playlist(api.playlist_uri)
     except:
         uris_in_playlist = set()
 
@@ -50,7 +49,7 @@ def update_playlist():
 
     logging.info('will add {0} tracks'.format(len(tracks_to_be_added)))
 
-    response = api.add_tracks_to_playlist(tracks_to_be_added, playlist_uri)
+    response = api.add_tracks_to_playlist(tracks_to_be_added, api.playlist_uri)
 
     return jsonify(**response)
 
