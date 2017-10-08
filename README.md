@@ -11,7 +11,7 @@ My next steps include:
  - Automate this with a cron (or use something smarter like Airflow) so the playlist keeps getting updated
  - Pull some stats about what's playing, and when, trying to predict the next song, or mood, who knows what ...
 
-Feel free to ping me if you want to help !
+Feel free to ping me if you want to help!
 
 ## Installation
 To make it work, here's what to do.
@@ -26,7 +26,7 @@ The app will need those to update tracks to your playlist. Copy the file ```.spo
 Once you're good, follow these commands to start the server. 
 
 ``` shell
-git clone git@github.com:ericdaat/kshe-to-spotify.git
+git clone https://github.com/ericdaat/kshe-to-spotify.git
 cd kshe-to-spotify
 pip install virtualenv
 virtualenv venv
