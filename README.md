@@ -43,5 +43,5 @@ The app should now be running on ```localhost:9999```.
 The calls supported so far are:
  - [GET] ```localhost:9999/```: Doesn't do much
  - [GET] ```localhost:9999/auth```: Authenticate for 3600 seconds
- - [GET] ```localhost:9999/update_playlist```: Updates the playlist with the latest songs
+ - [POST] ```localhost:9999/update_playlist```: Updates the playlist with the latest songs
 
