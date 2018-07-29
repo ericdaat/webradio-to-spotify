@@ -10,7 +10,6 @@ class KSHEScraper(object):
         self.player_url = player_url
         logging.info('using {0}'.format(self.player_url))
 
-
     def get_song_history(self):
         soup = BeautifulSoup(requests.get(self.player_url).text, 'html.parser')
         song_history = soup.find('section', {'id': ['songHistory']})

@@ -4,7 +4,7 @@ import base64
 import pandas as pd
 import datetime
 import logging
-from urllib  import urlencode
+from urllib.parse import urlencode
 
 
 class SpotifyApi(object):
@@ -22,11 +22,11 @@ class SpotifyApi(object):
         self._refresh_token = None
         self._token_expires_in = None
 
-
     def _client_credentials_authentication(self, authorization_code=None, redirect_uri=None):
         auth_header = base64.b64encode(
-            '{0}:{1}'.format(self._client_id, self._client_secret)
-        ).encode('ascii')
+            '{0}:{1}'.format(self._client_id,
+                             self._client_secret
+                             ).encode('ascii'))
 
         response = requests.post(
             'https://accounts.spotify.com/api/token',
@@ -40,7 +40,6 @@ class SpotifyApi(object):
 
         return response.json()
 
-
     def _authorization_code_flow_authentication(self):
         return 'https://accounts.spotify.com/authorize?{0}'.format(
             urlencode({
@@ -50,7 +49,6 @@ class SpotifyApi(object):
                 'scope': 'playlist-modify-public playlist-modify-private',
                 'show_dialog': False
             }))
-
 
     def search_track(self, track_name, artist_name, limit=1):
         try:
@@ -83,7 +81,6 @@ class SpotifyApi(object):
             'album_image': response['album']['images'][0]['url']
         }
 
-
     def get_track_uris_from_playlist(self, playlist_uri):
         response = requests.get(
             'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
@@ -97,7 +94,6 @@ class SpotifyApi(object):
             }).json()
 
         return set([t['track']['uri'] for t in response['items']])
-
 
     def add_tracks_to_playlist(self, track_uris, playlist_uri):
         return requests.post(
