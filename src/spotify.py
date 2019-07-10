@@ -1,15 +1,14 @@
-import requests
 import json
 import base64
-import pandas as pd
-import datetime
 import logging
 from urllib.parse import urlencode
+
+import requests
 
 
 class SpotifyApi(object):
     def __init__(self):
-        with open("../.spotify-token.json") as f:
+        with open(".spotify-token.json") as f:
             credentials = json.loads(f.read())
 
         self._user_id = credentials['user_id']
@@ -17,24 +16,27 @@ class SpotifyApi(object):
         self._client_secret = credentials['client_secret']
         self.redirect_uri = credentials['redirect_uri']
         self.playlist_uri = credentials['playlist_uri']
-        
+
+        # Will be set after spotify auth
         self._access_token = None
         self._refresh_token = None
         self._token_expires_in = None
 
-    def _client_credentials_authentication(self, authorization_code=None, redirect_uri=None):
+    def _client_credentials_authentication(self, authorization_code=None):
         auth_header = base64.b64encode(
             '{0}:{1}'.format(self._client_id,
                              self._client_secret
                              ).encode('ascii'))
 
         response = requests.post(
-            'https://accounts.spotify.com/api/token',
-            headers={'Authorization': 'Basic {0}'.format(auth_header.decode('ascii'))},
+            url='https://accounts.spotify.com/api/token',
+            headers={
+                'Authorization': 'Basic {0}'.format(auth_header.decode('ascii'))
+            },
             data={
-                'grant_type':'authorization_code',
+                'grant_type': 'authorization_code',
                 'code': authorization_code,
-                'redirect_uri': redirect_uri,
+                'redirect_uri': self.redirect_uri,
                 'scope': 'playlist-modify-public playlist-modify-private'
             })
 
@@ -55,16 +57,18 @@ class SpotifyApi(object):
             response = requests.get(
                 'https://api.spotify.com/v1/search',
                 params={
-                    'q':'artist:"{0}"%20track:"{1}"'.format(artist_name, track_name),
-                    'type':'track',
+                    'q': 'artist:"{0}"%20track:"{1}"'.format(artist_name, track_name),
+                    'type': 'track',
                     'limit': limit
                 },
-                headers={'Authorization': 'Bearer {0}'.format(self._access_token)}
+                headers={
+                    'Authorization': 'Bearer {0}'.format(self._access_token)
+                }
             ).json()['tracks']['items'][0]
         except:
             logging.warning(
                 'could not find track {0} from {1}'.format(
-                    track_name, 
+                    track_name,
                     artist_name
                 )
             )
@@ -81,25 +85,27 @@ class SpotifyApi(object):
             'album_image': response['album']['images'][0]['url']
         }
 
-    def get_track_uris_from_playlist(self, playlist_uri):
+    def get_track_uris_from_playlist(self):
         response = requests.get(
             'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
                 self._user_id,
-                playlist_uri
+                self.playlist_uri
             ),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             params={
-                'fields':['items.track.uri'],
+                'fields': ['items.track.uri'],
                 'limit': 100
             }).json()
 
-        return set([t['track']['uri'] for t in response['items']])
+        track_uris = set([t['track']['uri'] for t in response['items']])
 
-    def add_tracks_to_playlist(self, track_uris, playlist_uri):
+        return track_uris
+
+    def add_tracks_to_playlist(self, track_uris):
         return requests.post(
-                'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
+            'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
                 self._user_id,
-                playlist_uri),
+                self.playlist_uri),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             data=json.dumps({'uris': track_uris})
         ).json()
