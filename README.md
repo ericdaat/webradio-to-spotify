@@ -38,29 +38,26 @@ Once your app is created, you will have access to the following crendentials:
 - redirect_uri
 
 The app will need those to update tracks to your playlist.
-Copy the file ```.spotify-token.json.dist``` into ```.spotify-token.json```
+Copy the file `.spotify-token.json.dist` into `.spotify-token.json`
 and fill in these credentials. You will also need your spotify *user-id*
 (your username) and the *playlist-uri* to which you'll upload the tracks to.
 
 Once you're good, follow these commands to start the server.
 
 ``` shell
-git clone https://github.com/ericdaat/kshe-to-spotify.git
-cd kshe-to-spotify
 pip install virtualenv
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-cd flask-server
 uwsgi wsgi.ini
 ```
 
-The app should now be running on ```localhost:9999```.
+The app should now be running on `localhost:9999`.
 
 ## API
 
 The calls supported so far are:
 
-- [GET] ```localhost:9999/```: Doesn't do much
-- [GET] ```localhost:9999/auth```: Authenticate for 3600 seconds
-- [POST] ```localhost:9999/update_playlist```: Updates the playlist with the latest songs
+- [GET] `localhost:9999/`: Check that the app is up
+- [GET] `localhost:9999/auth`: Authenticate for 3600 seconds
+- [POST] `localhost:9999/update_playlist`: Updates the playlist with the latest songs
