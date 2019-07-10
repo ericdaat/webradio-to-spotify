@@ -1,25 +1,15 @@
 import json
 import logging
 from operator import itemgetter
-from abc import ABCMeta, abstractmethod
 
 from bs4 import BeautifulSoup
 import requests
 
 
-class Scrapper(ABCMeta):
-    def __init__(self, player_url):
-        self.player_url = player_url
-        logging.info('using {0}'.format(self.player_url))
-
-    @abstractmethod
-    def get_song_history(self):
-        pass
-
-
-class KSHEScraper(Scrapper):
+class KSHEScraper(object):
     def __init__(self):
-        super().__init__('http://player.listenlive.co/20101/en/songhistory')
+        self.player_url = 'http://player.listenlive.co/20101/en/songhistory'
+        logging.info('using {0}'.format(self.player_url))
 
     def get_song_history(self):
         soup = BeautifulSoup(requests.get(self.player_url).text, 'html.parser')

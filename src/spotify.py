@@ -1,8 +1,9 @@
-import requests
 import json
 import base64
 import logging
 from urllib.parse import urlencode
+
+import requests
 
 
 class SpotifyApi(object):
@@ -28,9 +29,10 @@ class SpotifyApi(object):
                              ).encode('ascii'))
 
         response = requests.post(
-            'https://accounts.spotify.com/api/token',
-            headers={'Authorization': 'Basic {0}'.format(
-                auth_header.decode('ascii'))},
+            url='https://accounts.spotify.com/api/token',
+            headers={
+                'Authorization': 'Basic {0}'.format(auth_header.decode('ascii'))
+            },
             data={
                 'grant_type': 'authorization_code',
                 'code': authorization_code,
