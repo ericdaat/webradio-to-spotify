@@ -10,10 +10,6 @@ class Scraper(ABC):
         self.name = self.__class__.__name__
         self.player_url = player_url
 
-        options = webdriver.FirefoxOptions()
-        options.headless = True
-        self.driver = webdriver.Firefox(options=options)
-
         logging.info('Scraper initialized. Using {0}'.format(self.player_url))
 
     @abstractmethod
@@ -30,8 +26,12 @@ class KSHEScraper(Scraper):
         super(KSHEScraper, self).__init__(player_url)
 
     def get_song_history(self):
-        self.driver.get(self.player_url)
-        soup = BeautifulSoup(self.driver.page_source, "lxml")
+        options = webdriver.FirefoxOptions()
+        options.headless = True
+        driver = webdriver.Firefox(options=options)
+
+        driver.get(self.player_url)
+        soup = BeautifulSoup(driver.page_source, "lxml")
 
         recently_played = soup.find_all("li", {"class": "hll-recent-track"})
 
@@ -55,6 +55,8 @@ class KSHEScraper(Scraper):
                 {"title": title, "artist": artist, "timestamp": song_timestamp}
             )
 
+        driver.quit()
+
         return history
 
 
@@ -65,8 +67,12 @@ class EagleScraper(Scraper):
         super(EagleScraper, self).__init__(player_url)
 
     def get_song_history(self):
-        self.driver.get(self.player_url)
-        soup = BeautifulSoup(self.driver.page_source, "lxml")
+        options = webdriver.FirefoxOptions()
+        options.headless = True
+        driver = webdriver.Firefox(options=options)
+
+        driver.get(self.player_url)
+        soup = BeautifulSoup(driver.page_source, "lxml")
 
         recently_played = soup.find_all("div", {"class": "ts-track-item"})
 
@@ -86,5 +92,7 @@ class EagleScraper(Scraper):
             history.append(
                 {"title": title, "artist": artist, "timestamp": None}
             )
+
+        driver.quit()
 
         return history
