@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
-engine = create_engine('sqlite:///db.sqlite3', echo=True)
+engine = create_engine('sqlite:///db.sqlite3', echo=False)
 Session = sessionmaker(bind=engine)
 
 
@@ -19,3 +19,4 @@ class Song(Base):
     explicit = Column(Boolean)
     spotify_uri = Column(String, unique=True)
     album_image = Column(String)
+    scraper_name = Column(String)

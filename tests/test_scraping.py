@@ -29,3 +29,7 @@ class GenericScraperTest(unittest.TestCase):
 
 class TestKSHEScraper(GenericScraperTest):
     scraper = scraping.KSHEScraper()
+
+
+class TestEagleScraper(GenericScraperTest):
+    scraper = scraping.EagleScraper()

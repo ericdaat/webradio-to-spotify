@@ -56,3 +56,35 @@ class KSHEScraper(Scraper):
             )
 
         return history
+
+
+class EagleScraper(Scraper):
+    def __init__(self):
+        player_url = 'https://eagle969.radio.com/playlist'
+
+        super(EagleScraper, self).__init__(player_url)
+
+    def get_song_history(self):
+        self.driver.get(self.player_url)
+        soup = BeautifulSoup(self.driver.page_source, "lxml")
+
+        recently_played = soup.find_all("div", {"class": "ts-track-item"})
+
+        history = []
+
+        for recently_played_item in recently_played:
+            title = recently_played_item.find(
+                "div",
+                {"class": "ts-song-title tagstation__song"}
+            ).text.strip().lower()
+
+            artist = recently_played_item.find(
+                "div",
+                {"class": "ts-artist tagstation__artist"}
+            ).text.strip().lower()
+
+            history.append(
+                {"title": title, "artist": artist, "timestamp": None}
+            )
+
+        return history

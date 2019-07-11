@@ -1,6 +1,6 @@
 import logging
 
-from src.scraping import KSHEScraper
+from src import scraping
 from src.spotify import SpotifyApi
 from src.db import Session, Song
 
@@ -11,7 +11,8 @@ class Updater(object):
         self.is_authenticated = False
 
         self.scrapers = [
-            KSHEScraper(),
+            scraping.KSHEScraper(),
+            scraping.EagleScraper()
         ]
 
     def spotify_auth(self):
@@ -39,7 +40,7 @@ class Updater(object):
 
         return spotify_songs
 
-    def filter_and_save_songs_to_db(self, spotify_songs):
+    def filter_and_save_songs_to_db(self, spotify_songs, scraper_name):
         # save tracks in DB
         session = Session()
         spotify_filtered_songs = []
@@ -51,6 +52,7 @@ class Updater(object):
                            .first()
 
             if match is None:
+                song["scraper_name"] = scraper_name
                 session.add(Song(**song))
                 spotify_filtered_songs.append(song)
             else:
@@ -80,7 +82,8 @@ class Updater(object):
 
             # filter out already present songs and sync database
             spotify_filtered_songs = self.filter_and_save_songs_to_db(
-                spotify_songs
+                spotify_songs,
+                scraper_name=scraper.name
             )
 
             # upload the filtered out songs to the spotify playlist
