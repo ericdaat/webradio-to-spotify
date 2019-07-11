@@ -42,15 +42,24 @@ class Updater(object):
     def filter_and_save_songs_to_db(self, spotify_songs):
         # save tracks in DB
         session = Session()
+        spotify_filtered_songs = []
+
         for i, song in enumerate(spotify_songs):
             # Don't save and upload song if it exists
-            if session.query(Song).filter_by(spotify_uri=song['spotify_uri']):
-                spotify_songs.pop(i)
-            else:
+            match = session.query(Song)\
+                           .filter_by(spotify_uri=song['spotify_uri'])\
+                           .first()
+
+            if match is None:
                 session.add(Song(**song))
+                spotify_filtered_songs.append(song)
+            else:
+                logging.warning('{0} already in playlist'
+                                .format(song['song_name']))
+
         session.commit()
 
-        return spotify_songs
+        return spotify_filtered_songs
 
     def add_songs_to_playlist(self, spotify_songs):
         logging.info('will add {0} tracks'.format(len(spotify_songs)))
