@@ -1,4 +1,4 @@
-# kshe-to-spotify
+# Web Radio to Spotify
 
 [![CircleCI](https://circleci.com/gh/ericdaat/kshe-to-spotify.svg?style=svg)](https://circleci.com/gh/ericdaat/kshe-to-spotify)
 
@@ -22,8 +22,7 @@ My next steps include:
 
 - Automate this with a cron (or use something smarter like Airflow)
   so the playlist keeps getting updated
-- Pull some stats about what's playing, and when, trying to predict
-  the next song, or mood, who knows what ...
+- Add more web radios that will populate the playlist
 
 Feel free to ping me if you want to help!
 
