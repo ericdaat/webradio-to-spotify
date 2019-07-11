@@ -1,5 +1,7 @@
 # kshe-to-spotify
 
+[![CircleCI](https://circleci.com/gh/ericdaat/kshe-to-spotify.svg?style=svg)](https://circleci.com/gh/ericdaat/kshe-to-spotify)
+
 As a big fan of Classic Rock living in France, I am very frustrated by the
 lack of good classic rock radio we have. I spent four months in St Louis, MO,
 and I had the chance to listen to [KSHE 95](http://www.kshe95.com/) every day,
@@ -33,26 +35,36 @@ First, you'll need to setup your Spotify developer account, and register an app.
 Find how [here](https://developer.spotify.com/web-api/).
 Once your app is created, you will have access to the following crendentials:
 
-- client_id
-- client_secret
-- redirect_uri
+- `client_id`
+- `client_secret`
+- `redirect_uri`
 
 The app will need those to update tracks to your playlist.
-Copy the file `.spotify-token.json.dist` into `.spotify-token.json`
-and fill in these credentials. You will also need your spotify *user-id*
-(your username) and the *playlist-uri* to which you'll upload the tracks to.
 
-Once you're good, follow these commands to start the server.
+Copy the file `.spotify-token.json.dist` into `.spotify-token.json`
+and fill in these credentials. You will also need to add:
+
+- Your spotify *user_id* (your username)
+- The *playlist_id* to which you'll upload the tracks to
+  (e.g mine is `3BCcE8T945z1MnfPWkFsfX`)
+
+Once you're good, install the requirements in a virtual environment:
 
 ``` shell
-pip install virtualenv
+pip install virtualenv  # if you don't have it already
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
-uwsgi wsgi.ini
 ```
 
-The app should now be running on `localhost:9999`.
+The app uses an `sqlite` database to store all the songs it has downloaded so far. You have to initialize the database running this command: `make init-db`.
+
+Here are the required steps to update your playlist with
+the latest songs from the KSHE radio:
+
+- First, launch the server: `make start-api`. The app should now be running on `http://localhost:9999`.
+- Then, open your browser and go to `http://localhost:9999/auth` to authenticate to Spotify.
+- Finally, run `make update-playlist` to get the latest songs in your playlist.
 
 ## API
 

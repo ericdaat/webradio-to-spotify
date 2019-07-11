@@ -7,6 +7,9 @@ PYTHON=${VENV_NAME}/bin/python3
 
 export PYTHONPATH="."
 
+init-db:
+	PYTHONPATH="." python scripts/init_db.py
+
 tests:
 	python -m unittest discover -s tests;
 
