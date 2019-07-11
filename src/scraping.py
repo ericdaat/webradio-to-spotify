@@ -37,7 +37,6 @@ class KSHEScraper(object):
                 "div",
                 {"class": "time"}
             ).time["datetime"]
-            song_timestamp = datetime.fromisoformat(song_timestamp)
 
             history.append(
                 {"title": title, "artist": artist, "timestamp": song_timestamp}
