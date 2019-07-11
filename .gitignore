@@ -7,3 +7,4 @@ data
 .vscode
 *.log
 *.sqlite3
+instance

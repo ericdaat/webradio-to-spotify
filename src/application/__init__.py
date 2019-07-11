@@ -4,8 +4,7 @@ import logging
 from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 
-from src.spotify import SpotifyApi
-from src.scraping import KSHEScraper
+from src.playlist_updater import Updater
 
 
 def create_app():
@@ -24,12 +23,11 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
     # objects
-    app.spotify = SpotifyApi()
-    app.scraper = KSHEScraper()
+    app.updater = Updater()
 
     # blueprints
-    from src.application import updater, auth
+    from src.application import update, auth
     app.register_blueprint(auth.bp)
-    app.register_blueprint(updater.bp)
+    app.register_blueprint(update.bp)
 
     return app

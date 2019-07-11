@@ -21,6 +21,7 @@ class SpotifyApi(object):
         self._access_token = None
         self._refresh_token = None
         self._token_expires_in = None
+        self._token_type = None
 
     def _client_credentials_authentication(self, authorization_code=None):
         auth_header = base64.b64encode(
