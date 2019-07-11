@@ -75,7 +75,7 @@ class SpotifyApi(object):
 
         track = response_json['tracks']['items'][0]
 
-        return {
+        track_attributes = {
             'song_name': track['name'],
             'artist_name': track['artists'][0]['name'],
             'album_name': track['album']['name'],
@@ -85,6 +85,8 @@ class SpotifyApi(object):
             'spotify_uri': track['uri'],
             'album_image': track['album']['images'][0]['url']
         }
+
+        return track_attributes
 
     def get_track_uris_from_playlist(self):
         response = requests.get(
