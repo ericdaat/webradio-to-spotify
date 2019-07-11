@@ -16,8 +16,8 @@ class KSHEScraper(object):
         options = webdriver.FirefoxOptions()
         options.headless = True
         driver = webdriver.Firefox(options=options)
-
         driver.get(self.player_url)
+
         soup = BeautifulSoup(driver.page_source, "lxml")
 
         recently_played = soup.find_all("li", {"class": "hll-recent-track"})
