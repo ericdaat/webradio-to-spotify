@@ -7,9 +7,12 @@ from src.db import Session, Song
 
 class Updater(object):
     def __init__(self):
-        self.radio_scraper = KSHEScraper()
         self.spotify = SpotifyApi()
         self.is_authenticated = False
+
+        self.scrapers = [
+            KSHEScraper(),
+        ]
 
     def spotify_auth(self):
         url = self.spotify._authorization_code_flow_authentication()
@@ -27,11 +30,6 @@ class Updater(object):
 
         if response.get('access_token'):
             self.is_authenticated = True
-
-    def get_radio_history(self):
-        radio_history = self.radio_scraper.get_song_history()
-
-        return radio_history
 
     def search_songs_in_spotify(self, radio_history):
         spotify_songs = [self.spotify.search_track(s['title'], s['artist'])
@@ -62,3 +60,21 @@ class Updater(object):
         )
 
         return response
+
+    def scrap_and_update(self):
+        for scraper in self.scrapers:
+            # get song history
+            song_history = scraper.get_song_history()
+
+            # spotify songs
+            spotify_songs = self.search_songs_in_spotify(song_history)
+
+            # filter out already present songs and sync database
+            spotify_filtered_songs = self.filter_and_save_songs_to_db(
+                spotify_songs
+            )
+
+            # upload the filtered out songs to the spotify playlist
+            _ = self.add_songs_to_playlist(
+                spotify_filtered_songs
+            )
