@@ -28,7 +28,8 @@ def create_app():
     app.scraper = KSHEScraper()
 
     # blueprints
-    from src.application import songs
-    app.register_blueprint(songs.bp)
+    from src.application import updater, auth
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(updater.bp)
 
     return app

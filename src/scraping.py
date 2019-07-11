@@ -30,7 +30,7 @@ class KSHEScraper(object):
                 "a",
                 {"class": "hll-link-color-hover ember-view"}
             )
-            title, artist = [r.text.strip() for r in song_results]
+            title, artist = [r.text.strip().lower() for r in song_results]
 
             # get song played time
             song_timestamp = recently_played_item.find(

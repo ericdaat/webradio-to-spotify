@@ -9,3 +9,9 @@ export PYTHONPATH="."
 
 tests:
 	python -m unittest discover -s tests;
+
+start-api:
+	uwsgi wsgi.ini
+
+update-playlist:
+	curl -X POST localhost:9999/update_playlist;

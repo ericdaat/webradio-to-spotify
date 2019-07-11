@@ -1,14 +1,17 @@
 import logging
 
-from flask import Blueprint, redirect, jsonify, current_app, request
+from flask import Blueprint, jsonify, current_app
 
 
-bp = Blueprint("songs", __name__)
+bp = Blueprint("updater", __name__)
 
 
 @bp.route('/')
 def index():
-    return jsonify(_api_version='1.0')
+    return jsonify(
+        _api_version='1.0',
+        _spotify_token=current_app.spotify._access_token is not None
+    )
 
 
 @bp.route('/scrap', methods=['GET'])
@@ -39,29 +42,3 @@ def update_playlist():
     response = current_app.spotify.add_tracks_to_playlist(tracks_to_be_added)
 
     return jsonify(**response)
-
-
-@bp.route('/auth', methods=['GET'])
-def auth():
-    return redirect(
-        current_app.spotify._authorization_code_flow_authentication()
-    )
-
-
-@bp.route('/callback')
-def callback():
-    response = current_app.spotify._client_credentials_authentication(
-        request.args['code']
-    )
-
-    current_app.spotify._access_token = response['access_token']
-    token_type = response['token_type']
-    current_app.spotify._token_expires_in = response['expires_in']
-
-    logging.info('authenticated')
-
-    return jsonify(
-        authenticated=True,
-        token_type=token_type,
-        token_expires_in=current_app.spotify._token_expires_in
-    )

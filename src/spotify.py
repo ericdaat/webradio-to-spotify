@@ -15,7 +15,7 @@ class SpotifyApi(object):
         self._client_id = credentials['client_id']
         self._client_secret = credentials['client_secret']
         self.redirect_uri = credentials['redirect_uri']
-        self.playlist_uri = credentials['playlist_uri']
+        self.playlist_id = credentials['playlist_id']
 
         # Will be set after spotify auth
         self._access_token = None
@@ -53,43 +53,44 @@ class SpotifyApi(object):
             }))
 
     def search_track(self, track_name, artist_name, limit=1):
-        try:
-            response = requests.get(
-                'https://api.spotify.com/v1/search',
-                params={
-                    'q': 'artist:"{0}"%20track:"{1}"'.format(artist_name, track_name),
-                    'type': 'track',
-                    'limit': limit
-                },
-                headers={
-                    'Authorization': 'Bearer {0}'.format(self._access_token)
-                }
-            ).json()['tracks']['items'][0]
-        except:
-            logging.warning(
-                'could not find track {0} from {1}'.format(
-                    track_name,
-                    artist_name
-                )
-            )
+        response = requests.get(
+            'https://api.spotify.com/v1/search',
+            params={
+                'q': '{0} artist:{1}'.format(track_name, artist_name),
+                'type': 'track',
+                'limit': limit
+            },
+            headers={
+                'Authorization': 'Bearer {0}'.format(self._access_token)
+            }
+        )
+        response_json = response.json()
+
+        if response.status_code != 200:
+            logging.error(response_json["error"]["message"])
+            return {}
+        elif response_json['tracks']['total'] == 0:
+            logging.error("empty search")
             return {}
 
+        track = response_json['tracks']['items'][0]
+
         return {
-            'song_name': response['name'],
-            'artist_name': response['artists'][0]['name'],
-            'album_name': response['album']['name'],
-            'popularity': response['popularity'],
-            'duration_ms': response['duration_ms'],
-            'explicit': response['explicit'],
-            'spotify_uri': response['uri'],
-            'album_image': response['album']['images'][0]['url']
+            'song_name': track['name'],
+            'artist_name': track['artists'][0]['name'],
+            'album_name': track['album']['name'],
+            'popularity': track['popularity'],
+            'duration_ms': track['duration_ms'],
+            'explicit': track['explicit'],
+            'spotify_uri': track['uri'],
+            'album_image': track['album']['images'][0]['url']
         }
 
     def get_track_uris_from_playlist(self):
         response = requests.get(
             'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
                 self._user_id,
-                self.playlist_uri
+                self.playlist_id
             ),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             params={
@@ -105,7 +106,7 @@ class SpotifyApi(object):
         return requests.post(
             'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
                 self._user_id,
-                self.playlist_uri),
+                self.playlist_id),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             data=json.dumps({'uris': track_uris})
         ).json()
