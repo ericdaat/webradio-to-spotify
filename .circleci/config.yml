@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: selenium/standalone-firefox:latest
 
     working_directory: ~/repo
 
