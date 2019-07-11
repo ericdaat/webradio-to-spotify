@@ -6,8 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: selenium/standalone-firefox:latest
-
+      - image: circleci/python:3.6.1
     working_directory: ~/repo
 
     steps:
@@ -26,6 +25,14 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+
+      - run:
+          name: install selenium drivers
+          command: |
+            wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+            tar -xvzf geckodriver*
+            chmod +x geckodriver
+            sudo mv geckodriver /usr/local/bin/
 
       - save_cache:
           paths:
