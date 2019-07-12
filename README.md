@@ -37,14 +37,7 @@ Once your app is created, you will have access to the following crendentials:
 - `client_secret`
 - `redirect_uri`
 
-The app will need those to update tracks to your playlist.
-
-Copy the file `.spotify-token.json.dist` into `.spotify-token.json`
-and fill in these credentials. You will also need to add:
-
-- Your spotify *user_id* (your username)
-- The *playlist_id* to which you'll upload the tracks to
-  (e.g mine is `3BCcE8T945z1MnfPWkFsfX`)
+Find you `user_id` (your spotify username) and add these 4 credentials in a file called `.spotify-token.json`. You have a template here: [.spotify-token.json.dist](./.spotify-token.json.dist). The app will need those to update tracks to your playlist.
 
 Once you're good, install the requirements in a virtual environment:
 
@@ -55,13 +48,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The app uses an `sqlite` database to store all the songs it has downloaded so far. You have to initialize the database running this command: `make init-db`.
+The app uses an `sqlite` database to store all the songs it has downloaded so
+far. You have to initialize the database running this command: `make init-db`.
 
 Here are the required steps to update your playlist with
 the latest songs from the KSHE radio:
 
-- First, launch the server: `make start-api`. The app should now be running on `http://localhost:9999`.
-- Then, open your browser and go to `http://localhost:9999/auth` to authenticate to Spotify.
+- First, launch the server: `make start-api`. The app should now be running \
+  on `http://localhost:9999`.
+- Then, open your browser and go to `http://localhost:9999/auth` \
+  to authenticate to Spotify.
 - Finally, run `make update-playlist` to get the latest songs in your playlist.
 
 ## API
@@ -70,7 +66,8 @@ The calls supported so far are:
 
 - `GET`, `localhost:9999/`: Check that the API is up
 - `GET`, `localhost:9999/auth`: Authenticate for 3600 seconds
-- `POST`, `localhost:9999/update_playlist`: Updates the playlist with the latest songs
+- `POST`, `localhost:9999/update_playlist`: Updates the playlist with \
+  the latest songs
 
 ## Contribute
 
@@ -85,11 +82,12 @@ Please follow these steps to do so:
     (although it should be explicit which website it crawls).
 - Make that class inherit from `Scraper`
 - Call for `super()` in its constructor, and pass it the URL of the webpage\
-    to crawl. e.g:
+    to crawl and the `playlist_id` to upload the songs to. e.g:
 
     ```python
     player_url = 'https://radio.com/awesome-song-history'
-    super(YourScrapper, self).__init__(player_url)
+    playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+    super(YourScrapper, self).__init__(player_url, playlist_id)
     ```
 
 - Overide the `get_song_history` method, the first row should be:

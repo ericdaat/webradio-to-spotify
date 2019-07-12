@@ -16,7 +16,6 @@ class SpotifyApi(object):
         self._client_id = credentials['client_id']
         self._client_secret = credentials['client_secret']
         self.redirect_uri = credentials['redirect_uri']
-        self.playlist_id = credentials['playlist_id']
 
         # Will be set after spotify auth
         self._access_token = None
@@ -127,7 +126,7 @@ class SpotifyApi(object):
 
         return track_uris
 
-    def add_tracks_to_playlist(self, track_uris):
+    def add_tracks_to_playlist(self, track_uris, playlist_id):
         """Add spotify songs to playlist, using their URIs.
 
         Args:
@@ -139,7 +138,7 @@ class SpotifyApi(object):
         response = requests.post(
             'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
                 self._user_id,
-                self.playlist_id),
+                playlist_id),
             headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
             data=json.dumps({'uris': track_uris})
         )
