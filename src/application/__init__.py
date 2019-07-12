@@ -26,8 +26,8 @@ def create_app():
     app.updater = Updater()
 
     # blueprints
-    from src.application import update, auth
+    from src.application import api, auth
     app.register_blueprint(auth.bp)
-    app.register_blueprint(update.bp)
+    app.register_blueprint(api.bp)
 
     return app

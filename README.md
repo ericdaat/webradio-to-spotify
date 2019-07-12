@@ -64,9 +64,9 @@ the latest songs from the KSHE radio:
 
 The calls supported so far are:
 
-- `GET`, `localhost:9999/`: Check that the API is up
+- `GET`, `localhost:9999/api`: Check that the API is up
 - `GET`, `localhost:9999/auth`: Authenticate for 3600 seconds
-- `POST`, `localhost:9999/update_playlist`: Updates the playlist with \
+- `POST`, `localhost:9999/api/update_playlist`: Updates the playlist with \
   the latest songs
 
 ## Contribute

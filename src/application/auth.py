@@ -11,7 +11,7 @@ def auth():
     return redirect(url)
 
 
-@bp.route('/callback')
+@bp.route('/auth/callback')
 def callback():
     current_app.updater.spotify_callback(
         authorization_code=request.args["code"]
