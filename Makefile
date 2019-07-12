@@ -13,7 +13,7 @@ init-db:
 tests:
 	python -m unittest discover -s tests;
 
-start-api:
+start:
 	uwsgi wsgi.ini
 
 update-playlist:
