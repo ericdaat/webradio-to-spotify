@@ -16,11 +16,22 @@ class Updater(object):
         ]
 
     def spotify_auth(self):
+        """Authenticates using Authorization Code Flow.
+
+        Returns:
+            str: URL to redirect to
+        """
         url = self.spotify._authorization_code_flow_authentication()
 
         return url
 
     def spotify_callback(self, authorization_code):
+        """Function called by Spotify with access token in the request
+        parameters.
+
+        Args:
+            authorization_code (str): Authorization code
+        """
         response = self.spotify._client_credentials_authentication(
             authorization_code
         )
@@ -30,9 +41,20 @@ class Updater(object):
         self.spotify._token_expires_in = response['expires_in']
 
         if response.get('access_token'):
+            # TODO: add authenticated until timestamp
             self.is_authenticated = True
 
     def search_songs_in_spotify(self, radio_history):
+        """Retrieve songs informations from title and artist using Spotify
+        Search API.
+
+        Args:
+            radio_history (list(dict)): list of dict with title and \
+                artist as keys
+
+        Returns:
+            list(dict): list of dict of spotify songs
+        """
         spotify_songs = [self.spotify.search_track(s['title'], s['artist'])
                          for s in radio_history if 'title' in s]
 
@@ -41,6 +63,16 @@ class Updater(object):
         return spotify_songs
 
     def filter_and_save_songs_to_db(self, spotify_songs, scraper_name):
+        """Filter out songs that have already been added and add the
+        remaining songs to the playlist.
+
+        Args:
+            spotify_songs (list(dict)): List of spotify songs as dict
+            scraper_name (str): Scraper class name
+
+        Returns:
+            list(dict): List of spotify songs that are not in the playlist yet
+        """
         # save tracks in DB
         session = Session()
         spotify_filtered_songs = []
@@ -64,6 +96,14 @@ class Updater(object):
         return spotify_filtered_songs
 
     def add_songs_to_playlist(self, spotify_songs):
+        """Add spotify songs to a playlist, using songs URI.
+
+        Args:
+            spotify_songs (list(dict)): List of spotify songs
+
+        Returns:
+            json: Json response from the Spotify API
+        """
         logging.info('will add {0} tracks'.format(len(spotify_songs)))
 
         response = self.spotify.add_tracks_to_playlist(
@@ -73,6 +113,13 @@ class Updater(object):
         return response
 
     def scrap_and_update(self):
+        """Run the whole pipeline for every scraper:
+
+        - Scrap the concerned website and get their song history
+        - Search for the songs in Spotify
+        - Filter the songs already in playlist and save them to DB
+        - Add the filtered songs to the playlist
+        """
         for scraper in self.scrapers:
             # get song history
             song_history = scraper.get_song_history()

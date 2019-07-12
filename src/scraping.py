@@ -12,8 +12,32 @@ class Scraper(ABC):
 
         logging.info('Scraper initialized. Using {0}'.format(self.player_url))
 
+    def scrap_webpage(self):
+        """Scrap the webpage. This function must be called first in the
+        ``get_song_history`` implementation.
+
+        Returns:
+            tuple: soup and driver
+        """
+        options = webdriver.FirefoxOptions()
+        options.headless = True
+        driver = webdriver.Firefox(options=options)
+
+        driver.get(self.player_url)
+        soup = BeautifulSoup(driver.page_source, "lxml")
+
+        return soup, driver
+
     @abstractmethod
     def get_song_history(self):
+        """Scrap the website and get its song history.
+        This function must be overiden. Its implementation must return
+        a list of dict with the following keys:
+
+        - title
+        - artist
+        - timestamp (can be null, it's not used so far)
+        """
         pass
 
 
@@ -26,12 +50,7 @@ class KSHEScraper(Scraper):
         super(KSHEScraper, self).__init__(player_url)
 
     def get_song_history(self):
-        options = webdriver.FirefoxOptions()
-        options.headless = True
-        driver = webdriver.Firefox(options=options)
-
-        driver.get(self.player_url)
-        soup = BeautifulSoup(driver.page_source, "lxml")
+        soup, driver = self.scrap_webpage()
 
         recently_played = soup.find_all("li", {"class": "hll-recent-track"})
 
@@ -67,12 +86,7 @@ class EagleScraper(Scraper):
         super(EagleScraper, self).__init__(player_url)
 
     def get_song_history(self):
-        options = webdriver.FirefoxOptions()
-        options.headless = True
-        driver = webdriver.Firefox(options=options)
-
-        driver.get(self.player_url)
-        soup = BeautifulSoup(driver.page_source, "lxml")
+        soup, driver = self.scrap_webpage()
 
         recently_played = soup.find_all("div", {"class": "ts-track-item"})
 
