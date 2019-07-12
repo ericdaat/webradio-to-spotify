@@ -63,7 +63,8 @@ class Updater(object):
 
         return spotify_songs
 
-    def filter_and_save_songs_to_db(self, spotify_songs, scraper_name):
+    def filter_and_save_songs_to_db(self, spotify_songs,
+                                    scraper_name, playlist_id):
         """Filter out songs that have already been added and add the
         remaining songs to the playlist.
 
@@ -81,11 +82,15 @@ class Updater(object):
         for i, song in enumerate(spotify_songs):
             # Don't save and upload song if it exists
             match = session.query(Song)\
-                           .filter_by(spotify_uri=song['spotify_uri'])\
+                           .filter_by(
+                               spotify_uri=song['spotify_uri'],
+                               playlist_id=playlist_id
+                            )\
                            .first()
 
             if match is None:
                 song["scraper_name"] = scraper_name
+                song["playlist_id"] = playlist_id
                 session.add(Song(**song))
                 spotify_filtered_songs.append(song)
             else:
@@ -96,7 +101,7 @@ class Updater(object):
 
         return spotify_filtered_songs
 
-    def add_songs_to_playlist(self, spotify_songs):
+    def add_songs_to_playlist(self, spotify_songs, playlist_id):
         """Add spotify songs to a playlist, using songs URI.
 
         Args:
@@ -108,7 +113,8 @@ class Updater(object):
         logging.info('will add {0} tracks'.format(len(spotify_songs)))
 
         response = self.spotify.add_tracks_to_playlist(
-            [s['spotify_uri'] for s in spotify_songs]
+            [s['spotify_uri'] for s in spotify_songs],
+            playlist_id
         )
 
         return response
@@ -131,10 +137,12 @@ class Updater(object):
             # filter out already present songs and sync database
             spotify_filtered_songs = self.filter_and_save_songs_to_db(
                 spotify_songs,
-                scraper_name=scraper.name
+                scraper_name=scraper.name,
+                playlist_id=scraper.playlist_id
             )
 
             # upload the filtered out songs to the spotify playlist
             _ = self.add_songs_to_playlist(
-                spotify_filtered_songs
+                spotify_filtered_songs,
+                playlist_id=scraper.playlist_id
             )

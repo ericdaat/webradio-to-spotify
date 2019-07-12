@@ -4,27 +4,38 @@
     (although it should be explicit which website it crawls).
 - Make that class inherit from `Scraper`
 - Call for `super()` in its constructor, and pass it the URL of the webpage\
-    to crawl. e.g:
+    to crawl and the `playlist_id` to upload the songs to. e.g:
+
     ```python
-    super(YourScrapper, self).__init__(player_url)
+    player_url = 'https://radio.com/awesome-song-history'
+    playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+    super(YourScrapper, self).__init__(player_url, playlist_id)
     ```
+
 - Overide the `get_song_history` method, the first row should be:
+
     ```python
     soup, driver = self.scrap_webpage()
     ```
-- Add your scraper in the `tests` folder:
+
+- Add your scraper in the [tests](./tests/test_scraping.py) folder:
+
     ```python
     class TestYourScraper(GenericScraperTest):
         scraper = scraping.YourScraper()
     ```
-- Add your scraper in the `src.playlist_updater.Updater` class:
+
+- Add your scraper in the
+  [src.playlist_updater.Updater](./src/playlist_updater.py) class:
+
     ```python
     self.scrapers = [
         scraping.KSHEScraper(),
         scraping.EagleScraper(),
-        scraping.YourScraper()
+        scraping.YourScraper()  # New scraper!
     ]
     ```
+
 - You're all set!
 """
 
@@ -36,9 +47,10 @@ from selenium import webdriver
 
 
 class Scraper(ABC):
-    def __init__(self, player_url):
+    def __init__(self, player_url, playlist_id):
         self.name = self.__class__.__name__
         self.player_url = player_url
+        self.playlist_id = playlist_id
 
         logging.info('Scraper initialized. Using {0}'.format(self.player_url))
 
@@ -76,8 +88,9 @@ class KSHEScraper(Scraper):
         player_url = 'https://live.kshe95.com/listen/?'\
                      'utm_source=station-website&utm_medium=widget'\
                      '&utm_campaign=now-playing'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
 
-        super(KSHEScraper, self).__init__(player_url)
+        super(KSHEScraper, self).__init__(player_url, playlist_id)
 
     def get_song_history(self):
         soup, driver = self.scrap_webpage()
@@ -112,8 +125,9 @@ class KSHEScraper(Scraper):
 class EagleScraper(Scraper):
     def __init__(self):
         player_url = 'https://eagle969.radio.com/playlist'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
 
-        super(EagleScraper, self).__init__(player_url)
+        super(EagleScraper, self).__init__(player_url, playlist_id)
 
     def get_song_history(self):
         soup, driver = self.scrap_webpage()
