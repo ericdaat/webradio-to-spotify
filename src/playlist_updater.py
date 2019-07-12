@@ -10,9 +10,10 @@ class Updater(object):
         self.spotify = SpotifyApi()
         self.is_authenticated = False
 
+        # Add new scrapers here
         self.scrapers = [
             scraping.KSHEScraper(),
-            scraping.EagleScraper()
+            scraping.EagleScraper(),
         ]
 
     def spotify_auth(self):

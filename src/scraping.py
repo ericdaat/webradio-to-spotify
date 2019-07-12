@@ -1,3 +1,33 @@
+""" Add new scrapers here. Please follow these steps to do so:
+
+- Create a class whose names ends with `Scraper`, e.g: `YourScrapper`\
+    (although it should be explicit which website it crawls).
+- Make that class inherit from `Scraper`
+- Call for `super()` in its constructor, and pass it the URL of the webpage\
+    to crawl. e.g:
+    ```python
+    super(YourScrapper, self).__init__(player_url)
+    ```
+- Overide the `get_song_history` method, the first row should be:
+    ```python
+    soup, driver = self.scrap_webpage()
+    ```
+- Add your scraper in the `tests` folder:
+    ```python
+    class TestYourScraper(GenericScraperTest):
+        scraper = scraping.YourScraper()
+    ```
+- Add your scraper in the `src.playlist_updater.Updater` class:
+    ```python
+    self.scrapers = [
+        scraping.KSHEScraper(),
+        scraping.EagleScraper(),
+        scraping.YourScraper()
+    ]
+    ```
+- You're all set!
+"""
+
 import logging
 from abc import ABC, abstractmethod
 

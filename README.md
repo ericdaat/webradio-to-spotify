@@ -68,6 +68,52 @@ the latest songs from the KSHE radio:
 
 The calls supported so far are:
 
-- [GET] `localhost:9999/`: Check that the app is up
-- [GET] `localhost:9999/auth`: Authenticate for 3600 seconds
-- [POST] `localhost:9999/update_playlist`: Updates the playlist with the latest songs
+- `GET`, `localhost:9999/`: Check that the API is up
+- `GET`, `localhost:9999/auth`: Authenticate for 3600 seconds
+- `POST`, `localhost:9999/update_playlist`: Updates the playlist with the latest songs
+
+## Contribute
+
+### Writing your own scraper
+
+If you want to add another website to populate the playlist, you can write
+a new scrapper in the [src.scraping](./src/scraping.py) module.
+
+Please follow these steps to do so:
+
+- Create a class whose names ends with `Scraper`, e.g: `YourScrapper`\
+    (although it should be explicit which website it crawls).
+- Make that class inherit from `Scraper`
+- Call for `super()` in its constructor, and pass it the URL of the webpage\
+    to crawl. e.g:
+
+    ```python
+    player_url = 'https://radio.com/awesome-song-history'
+    super(YourScrapper, self).__init__(player_url)
+    ```
+
+- Overide the `get_song_history` method, the first row should be:
+
+    ```python
+    soup, driver = self.scrap_webpage()
+    ```
+
+- Add your scraper in the [tests](./tests/test_scraping.py) folder:
+
+    ```python
+    class TestYourScraper(GenericScraperTest):
+        scraper = scraping.YourScraper()
+    ```
+
+- Add your scraper in the
+  [src.playlist_updater.Updater](./src/playlist_updater.py) class:
+
+    ```python
+    self.scrapers = [
+        scraping.KSHEScraper(),
+        scraping.EagleScraper(),
+        scraping.YourScraper()  # New scraper!
+    ]
+    ```
+
+- You're all set!
