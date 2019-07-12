@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 
+{% block title %} Home {% endblock %}
+
 {% block body %}
-<p>Hi</p>
+<section class="section">
+    <nav class="level">
+        <p class="level-item has-text-centered">
+          <i class="fab fa-spotify"></i>
+        </p>
+      </nav>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="field is-grouped is-grouped-centered">
+            <p class="control">
+                <a class="button is-primary" href="{{ url_for('web.auth') }}">
+                Authenticate
+                </a>
+            </p>
+            <p class="control">
+                <a class="button is-light" href="{{ url_for('web.update') }}">
+                Update Playlist
+                </a>
+            </p>
+        </div>
+    </div>
+</section>
 {% endblock %}

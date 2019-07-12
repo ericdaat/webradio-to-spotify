@@ -12,7 +12,7 @@ def index():
     )
 
 
-@bp.route('/update_playlist', methods=['POST'])
+@bp.route('/update_playlist', methods=['GET'])
 def update_playlist():
     inserted_songs = current_app.updater.scrap_and_update()
 
