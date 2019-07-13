@@ -154,3 +154,40 @@ class EagleScraper(Scraper):
         driver.quit()
 
         return history
+
+
+class Q1043Scrapper(Scraper):
+    def __init__(self):
+        player_url = 'https://q1043.iheart.com/music/recently-played/'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+
+        super(Q1043Scrapper, self).__init__(player_url, playlist_id)
+
+    def get_song_history(self):
+        soup, driver = self.scrap_webpage()
+
+        recently_played = soup.find_all(
+            "li",
+            {"class": "playlist-track-container ondemand-track"}
+        )
+
+        history = []
+
+        for recently_played_item in recently_played:
+            title = recently_played_item.find(
+                "a",
+                {"class": "song-title"}
+            ).text.strip().lower()
+
+            artist = recently_played_item.find(
+                "a",
+                {"class": "artist-name"}
+            ).text.strip().lower()
+
+            history.append(
+                {"title": title, "artist": artist, "timestamp": None}
+            )
+
+        driver.quit()
+
+        return history
