@@ -14,6 +14,7 @@ class Updater(object):
         self.scrapers = [
             scraping.KSHEScraper(),
             scraping.EagleScraper(),
+            scraping.Q1043Scrapper()
         ]
 
     def spotify_auth(self):
