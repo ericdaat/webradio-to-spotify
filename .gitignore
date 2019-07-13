@@ -8,3 +8,4 @@ data
 *.log
 *.sqlite3
 instance
+.DS_Store

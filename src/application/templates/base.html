@@ -14,13 +14,24 @@
     <title>Webradio to Spotify - {% block title %}{% endblock %}</title>
 
     <body>
-        <section class="section">
-            <nav class="level">
-                <p class="level-item has-text-centered title">
+        <nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{{ url_for('web.index') }}">
                     Webradio to Spotify
-                </p>
-                </nav>
-        </section>
+                </a>
+            </div>
+
+            <div class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="https://open.spotify.com/playlist/3BCcE8T945z1MnfPWkFsfX?si=Y7Tpl6ZAQKCtjxnynm_ZIQ">
+                        <i class="fab fa-spotify"></i>
+                    </a>
+                    <a class="navbar-item" href="https://github.com/ericdaat/webradio-to-spotify">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
         {% block body %}
         {% endblock %}
     </body>
