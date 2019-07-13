@@ -66,8 +66,12 @@ The calls supported so far are:
 
 - `GET`, `localhost:9999/api`: Check that the API is up
 - `GET`, `localhost:9999/auth`: Authenticate for 3600 seconds
-- `POST`, `localhost:9999/api/update_playlist`: Updates the playlist with \
+- `GET`, `localhost:9999/api/update_playlist`: Updates the playlist with \
   the latest songs
+
+## Web Interface
+
+![web-ui](screenshot.png)
 
 ## Contribute
 
