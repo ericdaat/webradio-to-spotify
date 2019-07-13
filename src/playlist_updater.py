@@ -1,4 +1,5 @@
 import logging
+from multiprocessing import Pool
 
 from src import scraping
 from src.spotify import SpotifyApi
@@ -120,6 +121,32 @@ class Updater(object):
 
         return response
 
+    def single_scraper_pipeline(self, scraper):
+        # get song history
+        song_history = scraper.get_song_history()
+
+        # spotify songs
+        spotify_songs = self.search_songs_in_spotify(song_history)
+
+        # filter out already present songs and sync database
+        spotify_filtered_songs = self.filter_and_save_songs_to_db(
+            spotify_songs,
+            scraper_name=scraper.name,
+            playlist_id=scraper.playlist_id
+        )
+
+        # upload the filtered out songs to the spotify playlist
+        _ = self.add_songs_to_playlist(
+            spotify_filtered_songs,
+            playlist_id=scraper.playlist_id
+        )
+
+        return {
+                "scraper": scraper.name,
+                "playlist_id": scraper.playlist_id,
+                "songs": spotify_filtered_songs
+            }
+
     def scrap_and_update(self):
         """Run the whole pipeline for every scraper:
 
@@ -131,37 +158,9 @@ class Updater(object):
         Returns:
             list(dict): Inserted songs
         """
-        inserted_songs = []
-        n_inserted_songs = 0
+        p = Pool(4)
 
-        for scraper in self.scrapers:
-            # get song history
-            song_history = scraper.get_song_history()
-
-            # spotify songs
-            spotify_songs = self.search_songs_in_spotify(song_history)
-
-            # filter out already present songs and sync database
-            spotify_filtered_songs = self.filter_and_save_songs_to_db(
-                spotify_songs,
-                scraper_name=scraper.name,
-                playlist_id=scraper.playlist_id
-            )
-
-            # upload the filtered out songs to the spotify playlist
-            _ = self.add_songs_to_playlist(
-                spotify_filtered_songs,
-                playlist_id=scraper.playlist_id
-            )
-
-            inserted_songs.append(
-                {
-                    "scraper": scraper.name,
-                    "playlist_id": scraper.playlist_id,
-                    "songs": spotify_filtered_songs
-                }
-            )
-
-            n_inserted_songs += len(spotify_filtered_songs)
+        inserted_songs = p.map(self.single_scraper_pipeline, self.scrapers)
+        n_inserted_songs = sum([len(r["songs"]) for r in inserted_songs])
 
         return inserted_songs, n_inserted_songs
