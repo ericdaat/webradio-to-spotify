@@ -126,7 +126,13 @@ class Updater(object):
         - Search for the songs in Spotify
         - Filter the songs already in playlist and save them to DB
         - Add the filtered songs to the playlist
+
+        Returns:
+            list(dict): Inserted songs
         """
+        inserted_songs = []
+        n_inserted_songs = 0
+
         for scraper in self.scrapers:
             # get song history
             song_history = scraper.get_song_history()
@@ -146,3 +152,15 @@ class Updater(object):
                 spotify_filtered_songs,
                 playlist_id=scraper.playlist_id
             )
+
+            inserted_songs.append(
+                {
+                    "scraper": scraper.name,
+                    "playlist_id": scraper.playlist_id,
+                    "songs": spotify_filtered_songs
+                }
+            )
+
+            n_inserted_songs += len(spotify_filtered_songs)
+
+        return inserted_songs, n_inserted_songs

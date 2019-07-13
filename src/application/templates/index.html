@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<section class="section">
+    <div class="container">
+        <div class="field is-grouped is-grouped-centered">
+            <p class="control">
+                <a class="button is-primary" href="{{ url_for('web.auth') }}">
+                Authenticate
+                </a>
+            </p>
+            <p class="control">
+                <a class="button is-light" href="{{ url_for('web.update') }}">
+                Update Playlist
+                </a>
+            </p>
+        </div>
+    </div>
+</section>
+
+{% if inserted_songs %}
+<section class="section">
+    <p class="title">Inserted Songs</p>
+    <div class="columns is-centered">
+        {% for scraper in inserted_songs %}
+            <div class="column">
+                <p class="subtitle"> {{ scraper["scraper"] }}</p>
+                {% for song in scraper["songs"] %}
+                    <article class="media">
+                        <figure class="media-left">
+                            <p class="image is-64x64">
+                                <img src="{{ song.album_image}}">
+                            </p>
+                        </figure>
+
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>{{song.song_name}}</strong>
+                                    <small>{{song.artist_name}}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

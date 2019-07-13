@@ -1,0 +1,38 @@
+<!doctype html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<content>
+    <title>Webradio to Spotify - {% block title %}{% endblock %}</title>
+
+    <body>
+        <nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{{ url_for('web.index') }}">
+                    Webradio to Spotify
+                </a>
+            </div>
+
+            <div class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="https://open.spotify.com/playlist/3BCcE8T945z1MnfPWkFsfX?si=Y7Tpl6ZAQKCtjxnynm_ZIQ">
+                        <i class="fab fa-spotify"></i>
+                    </a>
+                    <a class="navbar-item" href="https://github.com/ericdaat/webradio-to-spotify">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        {% block body %}
+        {% endblock %}
+    </body>
+</content>

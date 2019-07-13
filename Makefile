@@ -13,8 +13,8 @@ init-db:
 tests:
 	python -m unittest discover -s tests;
 
-start-api:
+start:
 	uwsgi wsgi.ini
 
 update-playlist:
-	curl -X POST localhost:9999/update_playlist;
+	curl -X GET localhost:9999/api/update_playlist;
