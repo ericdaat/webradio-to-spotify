@@ -6,35 +6,35 @@
 - Call for `super()` in its constructor, and pass it the URL of the webpage\
     to crawl and the `playlist_id` to upload the songs to. e.g:
 
-    ```python
-    player_url = 'https://radio.com/awesome-song-history'
-    playlist_id = '3BCcE8T945z1MnfPWkFsfX'
-    super(YourScrapper, self).__init__(player_url, playlist_id)
-    ```
+    .. code-block:: python
+
+        player_url = 'https://radio.com/awesome-song-history'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+        super(YourScrapper, self).__init__(player_url, playlist_id)
 
 - Overide the `get_song_history` method, the first row should be:
 
-    ```python
-    soup, driver = self.scrap_webpage()
-    ```
+    .. code-block:: python
+
+        soup, driver = self.scrap_webpage()
 
 - Add your scraper in the [tests](./tests/test_scraping.py) folder:
 
-    ```python
-    class TestYourScraper(GenericScraperTest):
-        scraper = scraping.YourScraper()
-    ```
+    .. code-block:: python
+
+        class TestYourScraper(GenericScraperTest):
+            scraper = scraping.YourScraper()
 
 - Add your scraper in the
   [src.playlist_updater.Updater](./src/playlist_updater.py) class:
 
-    ```python
-    self.scrapers = [
-        scraping.KSHEScraper(),
-        scraping.EagleScraper(),
-        scraping.YourScraper()  # New scraper!
-    ]
-    ```
+    .. code-block:: python
+
+        self.scrapers = [
+            scraping.KSHEScraper(),
+            scraping.EagleScraper(),
+            scraping.YourScraper()  # New scraper!
+        ]
 
 - You're all set!
 """
