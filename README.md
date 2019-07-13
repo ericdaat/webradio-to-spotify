@@ -71,7 +71,7 @@ The calls supported so far are:
 
 ## Web Interface
 
-![web-ui](screenshot.png)
+![web-ui](https://raw.githubusercontent.com/ericdaat/webradio-to-spotify/master/screenshot.png)
 
 ## Contribute
 

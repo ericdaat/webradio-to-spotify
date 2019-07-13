@@ -13,6 +13,11 @@ init-db:
 tests:
 	python -m unittest discover -s tests;
 
+docs:
+	sphinx-apidoc ./src -o docs/source -M;
+	cd docs && make clean && make html && cd ..;
+	open docs/build/html/index.html;
+
 start:
 	uwsgi wsgi.ini
 

@@ -9,3 +9,4 @@ data
 *.sqlite3
 instance
 .DS_Store
+docs/build
