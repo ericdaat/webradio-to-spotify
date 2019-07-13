@@ -1,6 +1,8 @@
 # Web Radio to Spotify
 
 [![CircleCI](https://circleci.com/gh/ericdaat/webradio-to-spotify.svg?style=svg)](https://circleci.com/gh/ericdaat/webradio-to-spotify)
+[![Documentation Status](https://readthedocs.org/projects/webradio-to-spotify/badge/?version=latest)](https://webradio-to-spotify.readthedocs.io/en/latest/?badge=latest)
+
 
 As a big fan of Classic Rock living in France, I am very frustrated by the
 lack of good classic rock radio we have. I spent four months in St Louis, MO,
