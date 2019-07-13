@@ -1,4 +1,6 @@
-from flask import Blueprint, redirect, jsonify, current_app, request
+from flask import (
+    Blueprint, redirect, current_app, request, url_for
+)
 
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -17,6 +19,4 @@ def callback():
         authorization_code=request.args["code"]
     )
 
-    return jsonify(
-        authenticated=True
-    )
+    return redirect(url_for("web.index"))

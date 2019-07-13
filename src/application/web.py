@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import (
+    Blueprint, render_template, current_app, redirect, url_for
+)
 
 
 bp = Blueprint("web", __name__, url_prefix="/web")
@@ -11,9 +13,12 @@ def index():
 
 @bp.route('/auth')
 def auth():
-    return render_template("index.html")
+    return redirect(url_for("auth.auth"))
 
 
 @bp.route('/update')
 def update():
+    # TODO: use API instead
+    inserted_songs = current_app.updater.scrap_and_update()
+
     return render_template("index.html")
