@@ -100,12 +100,21 @@ class KSHEScraper(Scraper):
         history = []
 
         for recently_played_item in recently_played:
+            div = recently_played_item.find("div", {"class": "caption"})
+            div = div.find("div", {"class": "vertical-align"})
+
             # get song infos
-            song_results = recently_played_item.find_all(
+            h3 = div.find("h3")
+            title = h3.find(
                 "a",
                 {"class": "hll-link-color-hover ember-view"}
-            )
-            title, artist = [r.text.strip().lower() for r in song_results]
+            ).text.strip().lower()
+
+            cite = div.find("cite")
+            artist = cite.find(
+                "a",
+                {"class": "hll-link-color-hover ember-view"}
+            ).text.strip().lower()
 
             # get song played time
             song_timestamp = recently_played_item.find(
