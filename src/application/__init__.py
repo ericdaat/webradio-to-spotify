@@ -1,7 +1,7 @@
 import os
 import logging
 
-from flask import Flask
+from flask import Flask, redirect, url_for
 from werkzeug.contrib.fixers import ProxyFix
 
 from src.playlist_updater import Updater
@@ -30,5 +30,10 @@ def create_app():
     app.register_blueprint(auth.bp)
     app.register_blueprint(api.bp)
     app.register_blueprint(web.bp)
+
+    # default route
+    @app.route("/")
+    def index():
+        return redirect(url_for("web.index"))
 
     return app

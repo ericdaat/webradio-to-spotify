@@ -131,6 +131,7 @@ class Updater(object):
             list(dict): Inserted songs
         """
         inserted_songs = []
+        n_inserted_songs = 0
 
         for scraper in self.scrapers:
             # get song history
@@ -160,4 +161,6 @@ class Updater(object):
                 }
             )
 
-        return inserted_songs
+            n_inserted_songs += len(spotify_filtered_songs)
+
+        return inserted_songs, n_inserted_songs

@@ -3,13 +3,6 @@
 {% block title %} Home {% endblock %}
 
 {% block body %}
-<section class="section">
-    <nav class="level">
-        <p class="level-item has-text-centered">
-          <i class="fab fa-spotify"></i>
-        </p>
-      </nav>
-</section>
 
 <section class="section">
     <div class="container">
@@ -27,4 +20,36 @@
         </div>
     </div>
 </section>
+
+{% if inserted_songs %}
+<section class="section">
+    <p class="title">Inserted Songs</p>
+    <div class="columns is-centered">
+        {% for scraper in inserted_songs %}
+            <div class="column">
+                <p class="subtitle"> {{ scraper["scraper"] }}</p>
+                {% for song in scraper["songs"] %}
+                    <article class="media">
+                        <figure class="media-left">
+                            <p class="image is-64x64">
+                                <img src="{{ song.album_image}}">
+                            </p>
+                        </figure>
+
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong>{{song.song_name}}</strong>
+                                    <small>{{song.artist_name}}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
 {% endblock %}

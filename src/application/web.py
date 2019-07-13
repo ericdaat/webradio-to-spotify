@@ -19,6 +19,9 @@ def auth():
 @bp.route('/update')
 def update():
     # TODO: use API instead
-    inserted_songs = current_app.updater.scrap_and_update()
+    inserted_songs, n_inserted_songs = current_app.updater.scrap_and_update()
 
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        inserted_songs=inserted_songs if n_inserted_songs > 0 else None
+    )

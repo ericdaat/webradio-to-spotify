@@ -14,9 +14,10 @@ def index():
 
 @bp.route('/update_playlist', methods=['GET'])
 def update_playlist():
-    inserted_songs = current_app.updater.scrap_and_update()
+    inserted_songs, n_inserted_songs = current_app.updater.scrap_and_update()
 
     return jsonify(
         updated=True,
-        inserted_songs=inserted_songs
+        inserted_songs=inserted_songs,
+        n_inserted_songs=n_inserted_songs
     )
