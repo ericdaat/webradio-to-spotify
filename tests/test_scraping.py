@@ -31,8 +31,8 @@ class TestKSHEScraper(GenericScraperTest):
     scraper = scraping.KSHEScraper()
 
 
-class TestEagleScraper(GenericScraperTest):
-    scraper = scraping.EagleScraper()
+# class TestEagleScraper(GenericScraperTest):
+#     scraper = scraping.EagleScraper()
 
 
 class TestQ1043Scrapper(GenericScraperTest):

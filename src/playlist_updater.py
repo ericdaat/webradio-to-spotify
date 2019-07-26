@@ -1,9 +1,10 @@
 import logging
 from multiprocessing import Pool
 
-from src import scraping
-from src.spotify import SpotifyApi
-from src.db import Session, Song
+from . import scraping
+from .spotify import SpotifyApi
+from .db import Session, Song
+from .exceptions import NoHistoryFound
 
 
 class Updater(object):
@@ -14,7 +15,7 @@ class Updater(object):
         # Add new scrapers here
         self.scrapers = [
             scraping.KSHEScraper(),
-            scraping.EagleScraper(),
+            # scraping.EagleScraper(), # TODO: Eagle website not reachable in the EU
             scraping.Q1043Scrapper()
         ]
 
@@ -123,7 +124,10 @@ class Updater(object):
 
     def single_scraper_pipeline(self, scraper):
         # get song history
-        song_history = scraper.get_song_history()
+        try:
+            song_history = scraper.get_song_history()
+        except NoHistoryFound:
+            return {}
 
         # spotify songs
         spotify_songs = self.search_songs_in_spotify(song_history)

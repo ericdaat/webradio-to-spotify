@@ -11,7 +11,7 @@ def create_app():
     """ Flask app factory that creates and configure the app.
     """
     app = Flask(__name__, instance_relative_config=True)
-    app.logger.setLevel(logging.DEBUG)
+    app.logger.setLevel(logging.INFO)
 
     # instance dir
     try:

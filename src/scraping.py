@@ -45,6 +45,8 @@ from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
+from .exceptions import NoHistoryFound
+
 
 class Scraper(ABC):
     def __init__(self, player_url, playlist_id):
@@ -97,6 +99,9 @@ class KSHEScraper(Scraper):
 
         recently_played = soup.find_all("li", {"class": "hll-recent-track"})
 
+        if not recently_played:
+            raise NoHistoryFound()
+
         history = []
 
         for recently_played_item in recently_played:
@@ -143,6 +148,9 @@ class EagleScraper(Scraper):
 
         recently_played = soup.find_all("div", {"class": "ts-track-item"})
 
+        if not recently_played:
+            raise NoHistoryFound()
+
         history = []
 
         for recently_played_item in recently_played:
@@ -179,6 +187,9 @@ class Q1043Scrapper(Scraper):
             "li",
             {"class": "playlist-track-container ondemand-track"}
         )
+
+        if not recently_played:
+            raise NoHistoryFound()
 
         history = []
 
