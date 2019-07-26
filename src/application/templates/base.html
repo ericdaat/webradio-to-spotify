@@ -8,13 +8,16 @@
     <!-- Bulma -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
 </head>
 
 <content>
     <title>Webradio to Spotify - {% block title %}{% endblock %}</title>
 
     <body>
-        <nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
+        <nav class="navbar has-background-white" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="{{ url_for('web.index') }}">
                     Webradio to Spotify

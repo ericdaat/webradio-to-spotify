@@ -1,0 +1,4 @@
+.has-bg-img {
+    background: url('../images/cover.jpg')center center;
+    background-size:cover;
+}

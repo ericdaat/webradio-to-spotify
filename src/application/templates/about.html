@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<section class="hero is-large has-bg-img">
+    <div class="hero-body">
+        <div class="container">
+        <p class="title has-text-white">
+            Web Radio to Spotify
+        </p>
+        <p class="subtitle has-text-white">
+            A web application to feed your Spotify playlists.
+        </p>
+        </div>
+    </div>
+</section>
+
+<section class="section has-background-white">
+    <div class="container has-text-justified">
+        <div class="content">
+            <p class="title">About</p>
+
+            <p>
+                As a big fan of Classic Rock living in France, I am very frustrated
+                by the lack of good classic rock radio we have. I spent four months
+                in St Louis, MO, and I had the chance to listen to KSHE 95 every
+                day, playing some of my favorite classic rock tunes. Unfortunately,
+                I can't listen to this radio in France as they block it.
+                Fortunately, their website shows the tune currently playing,
+                as well as a few previous ones.
+            </p>
+
+            <p>
+                I decided to make myself an empty Spotify playlist, and
+                automatically add in the KSHE tracks. I also wanted to be able
+                to add songs from other similar Classic Rock radio. So I built
+                a reusable architecture that enables to register different web
+                scrapers to get the radio playing history and add that into
+                my playlist.
+            </p>
+
+            <p>
+                So far, I am able to get the songs from these radios:
+
+                <ol type="1">
+                    <li>KSHE95 (St Louis, MO)</li>
+                    <li>The Eagle 969 (Sacramento, CA)</li>
+                    <li>Q104.3 (New York, NY)</li>
+                </ol>
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
