@@ -127,9 +127,9 @@ class KSHEScraper(Scraper):
                 {"class": "time"}
             ).time["datetime"]
 
-            history.append(
-                {"title": title, "artist": artist, "timestamp": song_timestamp}
-            )
+            result = {"title": title, "artist": artist, "timestamp": song_timestamp}
+            logging.info(result)
+            history.append(result)
 
         driver.quit()
 
@@ -164,9 +164,9 @@ class EagleScraper(Scraper):
                 {"class": "ts-artist tagstation__artist"}
             ).text.strip().lower()
 
-            history.append(
-                {"title": title, "artist": artist, "timestamp": None}
-            )
+            result = {"title": title, "artist": artist, "timestamp": None}
+            logging.info(result)
+            history.append(result)
 
         driver.quit()
 
@@ -204,9 +204,49 @@ class Q1043Scrapper(Scraper):
                 {"class": "artist-name"}
             ).text.strip().lower()
 
-            history.append(
-                {"title": title, "artist": artist, "timestamp": None}
-            )
+            result = {"title": title, "artist": artist, "timestamp": None}
+            logging.info(result)
+            history.append(result)
+
+        driver.quit()
+
+        return history
+
+
+class WMGKScrapper(Scraper):
+    def __init__(self):
+        player_url = 'https://wmgk.com/stream/WMGKFM/'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+
+        super(WMGKScrapper, self).__init__(player_url, playlist_id)
+
+    def get_song_history(self):
+        soup, driver = self.scrap_webpage()
+
+        recently_played = soup.find(
+            "div",
+            {"class": "song-archive"}
+        ).find_all("li")
+
+        if not recently_played:
+            raise NoHistoryFound()
+
+        history = []
+
+        for recently_played_item in recently_played:
+            title = recently_played_item.find(
+                "span",
+                {"class": "song-title"}
+            ).text.strip().lower()
+
+            artist = recently_played_item.find(
+                "span",
+                {"class": "song-artist"}
+            ).text.strip().lower()
+
+            result = {"title": title, "artist": artist, "timestamp": None}
+            logging.info(result)
+            history.append(result)
 
         driver.quit()
 

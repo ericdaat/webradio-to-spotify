@@ -16,7 +16,8 @@ class Updater(object):
         self.scrapers = [
             scraping.KSHEScraper(),
             # scraping.EagleScraper(), # TODO: Eagle website not reachable in the EU
-            scraping.Q1043Scrapper()
+            scraping.Q1043Scrapper(),
+            scraping.WMGKScrapper()
         ]
 
     def spotify_auth(self):
