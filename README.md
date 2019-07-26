@@ -25,6 +25,7 @@ So far, I am able to get the songs from these radios:
 - [KSHE95 (St Louis, MO)](https://www.kshe95.com/)
 - [The Eagle 969 (Sacramento, CA)](https://eagle969.radio.com/)
 - [Q104.3 (New York, NY)](https://q1043.iheart.com/)
+- [102.9 WMGK](https://wmgk.com/)
 
 Feel free to ping me if you want to help!
 
