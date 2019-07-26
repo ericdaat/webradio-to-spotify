@@ -41,3 +41,7 @@ class TestQ1043Scrapper(GenericScraperTest):
 
 class TestWMGKScrapper(GenericScraperTest):
     scraper = scraping.WMGKScrapper()
+
+
+class TestKLOScrapper(GenericScraperTest):
+    scraper = scraping.KLOScrapper()

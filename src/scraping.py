@@ -251,3 +251,44 @@ class WMGKScrapper(Scraper):
         driver.quit()
 
         return history
+
+
+class KLOScrapper(Scraper):
+    def __init__(self):
+        player_url = 'http://klos.tunegenie.com/onair/'
+        playlist_id = '3BCcE8T945z1MnfPWkFsfX'
+
+        super(KLOScrapper, self).__init__(player_url, playlist_id)
+
+    def get_song_history(self):
+        soup, driver = self.scrap_webpage()
+
+        recently_played = soup.find(
+            "ul",
+            {"class": "slots currentonair onairlist"}
+        ).find_all("li", {"class": "slot lt"})
+
+        if not recently_played:
+            raise NoHistoryFound()
+
+        history = []
+
+        for recently_played_item in recently_played:
+            left = recently_played_item.find("div", {"class": "left"})
+            title = left.find(
+                "div",
+                {"class": "song"}
+            ).text.strip().lower()
+
+            artist = left.find(
+                "div",
+                {"class": ""}
+            ).text.strip().lower()
+
+            result = {"title": title, "artist": artist, "timestamp": None}
+            logging.info(result)
+            history.append(result)
+
+        driver.quit()
+
+        return history
