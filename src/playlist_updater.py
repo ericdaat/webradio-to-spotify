@@ -16,9 +16,9 @@ class Updater(object):
         self.scrapers = [
             scraping.KSHEScraper(),
             # scraping.EagleScraper(), # TODO: Eagle website not reachable in the EU
-            scraping.Q1043Scrapper(),
-            scraping.WMGKScrapper(),
-            scraping.KLOScrapper()
+            # scraping.Q1043Scrapper(),
+            # scraping.WMGKScrapper(),
+            # scraping.KLOScrapper()
         ]
 
     def spotify_auth(self):
@@ -166,7 +166,7 @@ class Updater(object):
         """
         p = Pool(4)
 
-        inserted_songs = p.map(self.single_scraper_pipeline, self.scrapers)
+        inserted_songs = map(self.single_scraper_pipeline, self.scrapers)
         n_inserted_songs = sum([len(r["songs"]) for r in inserted_songs])
 
         return inserted_songs, n_inserted_songs
