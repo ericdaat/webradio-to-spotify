@@ -1,6 +1,5 @@
 # Web Radio to Spotify
 
-[![CircleCI](https://circleci.com/gh/ericdaat/webradio-to-spotify.svg?style=svg)](https://circleci.com/gh/ericdaat/webradio-to-spotify)
 [![Documentation Status](https://readthedocs.org/projects/webradio-to-spotify/badge/?version=latest)](https://webradio-to-spotify.readthedocs.io/en/latest/?badge=latest)
 
 
