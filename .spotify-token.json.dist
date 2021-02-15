@@ -1,6 +1,6 @@
 {
-    "user_id": "",
-    "client_id":"",
-    "client_secret": "",
-    "redirect_uri": ""
+    "user_id": "",  // your spotify username
+    "client_id":"", // found when creating a spotify application
+    "client_secret": "", // found when creating a spotify application
+    "redirect_uri": "http://localhost:9999/auth/callback"  // fixed for this application
 }

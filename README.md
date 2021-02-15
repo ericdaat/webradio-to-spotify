@@ -44,6 +44,9 @@ Once your app is created, you will have access to the following crendentials:
 
 Find you `user_id` (your spotify username) and add these 4 credentials in a file called `.spotify-token.json`. You have a template here: [.spotify-token.json.dist](./.spotify-token.json.dist). The app will need those to update tracks to your playlist.
 
+Note: in this application, the redirect URI must be
+`http://localhost:9999/auth/callback`.
+
 Once you're good, install the requirements in a virtual environment:
 
 ``` shell
