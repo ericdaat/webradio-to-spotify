@@ -52,6 +52,36 @@ class Updater(object):
             # TODO: add authenticated until timestamp
             self.is_authenticated = True
 
+    def sync_db_with_existing_songs(self, playlist_id):
+        """If the playlist already exist, look for songs in it and stores them
+        in the local database so we don't add duplicates.
+
+        Args:
+            playlist_id (str): Playlist ID
+        """
+        playlist_exists = self.spotify.check_playlist_exists(playlist_id)
+
+        if playlist_exists:
+            tracks = self.spotify.get_track_uris_from_playlist(playlist_id)
+
+            session = Session()
+
+            for uri in tracks:
+                song = Song(playlist_id=playlist_id, spotify_uri=uri)
+                session.add(song)
+
+                try:
+                    session.commit()
+                except:
+                    continue
+
+            session.close()
+
+        session = Session()
+        count = session.query(Song).count()
+        logging.info("Playlist has {0} songs after sync".format(count))
+        session.close()
+
     def search_songs_in_spotify(self, radio_history):
         """Retrieve songs informations from title and artist using Spotify
         Search API.

@@ -12,11 +12,12 @@ Session = sessionmaker(bind=engine)
 
 class Song(Base):
     __tablename__ = 'songs'
-
-    # Default fields
-    id = Column(Integer, primary_key=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Default fields
+    playlist_id = Column(String, primary_key=True)
+    spotify_uri = Column(String, primary_key=True)
 
     # from Spotify API
     song_name = Column(String)
@@ -25,9 +26,7 @@ class Song(Base):
     popularity = Column(Integer)
     duration_ms = Column(String)
     explicit = Column(Boolean)
-    spotify_uri = Column(String)
     album_image = Column(String)
 
     # From scraper
     scraper_name = Column(String)
-    playlist_id = Column(String)

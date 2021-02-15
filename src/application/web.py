@@ -21,6 +21,16 @@ def auth():
     return redirect(url_for("auth.auth"))
 
 
+@bp.route('/sync')
+def sync():
+    # TODO: fix this hard coded playlist ID
+    current_app.updater.sync_db_with_existing_songs("3BCcE8T945z1MnfPWkFsfX")
+
+    return render_template(
+        "index.html"
+    )
+
+
 @bp.route('/update')
 def update():
     # TODO: use API instead
