@@ -42,6 +42,8 @@ class Updater(object):
             authorization_code
         )
 
+        logging.info(response)
+
         self.spotify._access_token = response['access_token']
         self.spotify._token_type = response['token_type']
         self.spotify._token_expires_in = response['expires_in']

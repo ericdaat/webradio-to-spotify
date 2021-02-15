@@ -2,6 +2,7 @@ import json
 import base64
 import logging
 from urllib.parse import urlencode
+from http import HTTPStatus
 
 import requests
 
@@ -101,30 +102,49 @@ class SpotifyApi(object):
 
         return track_attributes
 
-    def get_track_uris_from_playlist(self, limit=100):
-        """Return the track URIs from the playlist
+    def check_playlist_exists(self, playlist_id):
+        response = requests.get(
+            "https://api.spotify.com/v1/users/ericda/playlists/{0}".format(playlist_id),
+            headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
+            params=dict(
+                fields=["id"]
+            )
+        )
 
-        Args:
-            limit (int, optional): Maximum number of songs to return.\
-                Defaults to 100.
+        return response.status_code == HTTPStatus.OK
+
+    def get_track_uris_from_playlist(self, playlist_id):
+        """Return the track URIs from the playlist
 
         Returns:
             set: the songs URIs
         """
-        response = requests.get(
-            'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
-                self._user_id,
-                self.playlist_id
-            ),
-            headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
-            params={
-                'fields': ['items.track.uri'],
-                'limit': limit
-            }).json()
+        offset = 0
+        batch_size = 100
+        tracks = []
 
-        track_uris = set([t['track']['uri'] for t in response['items']])
+        while True:
+            response = requests.get(
+                'https://api.spotify.com/v1/users/{0}/playlists/{1}/tracks'.format(
+                    self._user_id,
+                    playlist_id
+                ),
+                headers={'Authorization': 'Bearer {0}'.format(self._access_token)},
+                params={
+                    'fields': ['items.track.uri'],
+                    'limit': batch_size,
+                    'offset': offset
+                }).json()
 
-        return track_uris
+            tracks_batch = set([t['track']['uri'] for t in response['items']])
+            tracks += tracks_batch
+
+            if len(tracks_batch) < batch_size:
+                break
+
+            offset += batch_size
+
+        return tracks
 
     def add_tracks_to_playlist(self, track_uris, playlist_id):
         """Add spotify songs to playlist, using their URIs.
