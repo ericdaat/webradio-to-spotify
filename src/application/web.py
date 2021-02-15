@@ -38,5 +38,5 @@ def update():
 
     return render_template(
         "index.html",
-        inserted_songs=inserted_songs if n_inserted_songs > 0 else None
+        inserted_songs=inserted_songs
     )

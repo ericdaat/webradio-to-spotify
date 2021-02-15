@@ -1,5 +1,4 @@
 import logging
-from multiprocessing import Pool
 
 from . import scraping
 from .spotify import SpotifyApi
@@ -180,10 +179,10 @@ class Updater(object):
         )
 
         return {
-                "scraper": scraper.name,
-                "playlist_id": scraper.playlist_id,
-                "songs": spotify_filtered_songs
-            }
+            "scraper": scraper.name,
+            "playlist_id": scraper.playlist_id,
+            "songs": spotify_filtered_songs
+        }
 
     def scrap_and_update(self):
         """Run the whole pipeline for every scraper:
@@ -196,9 +195,10 @@ class Updater(object):
         Returns:
             list(dict): Inserted songs
         """
-        p = Pool(4)
 
-        inserted_songs = map(self.single_scraper_pipeline, self.scrapers)
+        inserted_songs = [self.single_scraper_pipeline(scraper)
+                          for scraper in self.scrapers]
+
         n_inserted_songs = sum([len(r["songs"]) for r in inserted_songs])
 
         return inserted_songs, n_inserted_songs
